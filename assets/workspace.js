@@ -119,7 +119,7 @@ function Group({ children }) { return children; }
 function Icon({ name, size = 18, ...props }) {
     const d = { search: React.createElement(Group, null,
             React.createElement("circle", { cx: "11", cy: "11", r: "7" }),
-            React.createElement("path", { d: "m16 16 5 5" })), chevron: React.createElement("path", { d: "m8 10 4 4 4-4" }), arrow: React.createElement(Group, null,
+            React.createElement("path", { d: "m16 16 5 5" })), chevron: React.createElement("path", { d: "m8 10 4 4 4-4" }), book: React.createElement("path", { d: "M4 5a2 2 0 0 1 2-2h5v16H6a2 2 0 0 0-2 2zM20 5a2 2 0 0 0-2-2h-5v16h5a2 2 0 0 1 2 2z" }), arrow: React.createElement(Group, null,
             React.createElement("path", { d: "M5 12h14M13 6l6 6-6 6" })), chart: React.createElement(Group, null,
             React.createElement("path", { d: "M3 3v18h18" }),
             React.createElement("path", { d: "m6 16 5-6 4 3 5-8" })), company: React.createElement(Group, null,
@@ -177,12 +177,13 @@ function Notice({ type = 'normal', children }) { return React.createElement("div
 // must invalidate old, in-flight requests before their data reaches the screen.
 function validTicker(raw) { return /^[A-Z][A-Z0-9.\-]{0,11}$/.test(String(raw || '').trim().toUpperCase()); }
 // QuantEdge is a writing and publishing desk; the Analysis Lab is the main tool.
-const QE_NAV = [['Home', 'layout'], ['Analysis Lab', 'model'], ['Options', 'chart'], ['Public Site', 'globe'], ['LinkedIn', 'file'], ['Reports', 'file'], ['Library', 'library'], ['Guide', 'spark'], ['About', 'info']];
+const QE_NAV = [['Home', 'layout'], ['Analysis Lab', 'model'], ['Options', 'chart'], ['Learn', 'book'], ['Public Site', 'globe'], ['LinkedIn', 'file'], ['Reports', 'file'], ['Library', 'library'], ['Guide', 'spark'], ['About', 'info']];
 /* One header band per page: which page this is, what it is for and, where useful, the next step.
    Home keeps its own headline in the hero, so its band carries no h1. */
 const QE_PAGE_BAND = {
     Home: { purpose: 'Your desk: what you have published, and where to start the next analysis.', next: 'New here? Read what QuantEdge does, and what it cannot do.', action: ['About', 'What is QuantEdge?'] },
     'Analysis Lab': { title: 'Run an analysis on official data', purpose: 'Analyst tools built on SEC filings and historical prices. Each answers one question and shows its sources.', next: 'Choose a question and a company and run it, then write your thesis and risks: publishing unlocks once both are written.' },
+    Learn: { title: 'Learn the formulas and the data', purpose: 'What each analysis computes, where its numbers come from and how to read the result.', next: 'New to this? Follow “Where to start”, then open any analysis in the Lab.', action: ['Analysis Lab', 'Open the Analysis Lab'] },
     Options: { title: 'Live options lab', purpose: 'Price a US stock’s listed options with Black–Scholes and the Heston stochastic-volatility model, refreshed live (option quotes are delayed about 15 minutes).', next: 'Type a ticker such as AAPL or SPY and press Enter; tick Live to refresh every minute. When you are ready, write a research note from the snapshot.', action: ['Analysis Lab', 'See all 30 analyses'] },
     'Public Site': { title: 'My public site', purpose: 'Publish chosen analyses as a free website you can link from your CV and LinkedIn.', next: 'Add analyses from the Analysis Lab, preview the site, then download it and upload it to GitHub Pages for free.', action: ['Analysis Lab', 'Open the Analysis Lab'] },
     LinkedIn: { title: 'LinkedIn research posts', purpose: 'Turn your own thesis and official figures into plain text you can paste directly.', next: 'Select a company and load its SEC data first. The post is built on your own thesis, so write that too.' },
@@ -209,7 +210,7 @@ function PageBand({ page, setPage }) {
             meta.action && e('button', { type: 'button', className: 'tiny-link', onClick: () => setPage(meta.action[0]) }, L(meta.action[1]), e(Icon, { name: 'arrow', size: 14 }))));
 }
 function makeCommandIndex(ticker) {
-    const pages = [['Analysis Lab', 'Open Analysis Lab', 'model'], ['Options', 'Open the live options lab', 'chart'], ['Public Site', 'Open my public site', 'globe'], ['LinkedIn', 'Write a LinkedIn post', 'file'], ['Reports', 'Open Research Publisher', 'file'], ['Library', 'Open Research Library', 'library'], ['Guide', 'Open guided research journey', 'spark'], ['About', 'What is QuantEdge?', 'info']];
+    const pages = [['Analysis Lab', 'Open Analysis Lab', 'model'], ['Options', 'Open the live options lab', 'chart'], ['Learn', 'Learn the formulas and the data', 'book'], ['Public Site', 'Open my public site', 'globe'], ['LinkedIn', 'Write a LinkedIn post', 'file'], ['Reports', 'Open Research Publisher', 'file'], ['Library', 'Open Research Library', 'library'], ['Guide', 'Open guided research journey', 'spark'], ['About', 'What is QuantEdge?', 'info']];
     const tools = [['company', 'Load SEC fundamentals', 'company'], ['save', 'Save research draft', 'save']];
     const tickers = ['NVDA', 'AMD', 'AAPL', 'MSFT', 'INTC', 'AVGO'].map(x => ['ticker:' + x, 'Switch to ' + x, 'search']);
     // keywords: the tab's own (translated) name and the English page name, so 'opsiyonlar' or 'options' finds the tab
@@ -219,7 +220,7 @@ function CommandPalette({ query, setQuery, close, commands, onExecute }) {
     // Turkish-aware folding (help_bot.js): 'OPSİYONLAR', 'HAKKIMIZDA' and 'kutuphane' find their tabs too
     const fold = typeof qeHelpFold === 'function' ? qeHelpFold : (s => String(s).trim().toLowerCase());
     const q = fold(query);
-    const visible = commands.filter(x => fold(x.title + ' ' + x.kind + ' ' + (x.keywords || '')).includes(q)).slice(0, query.trim() ? 9 : 10);
+    const visible = commands.filter(x => fold(x.title + ' ' + x.kind + ' ' + (x.keywords || '')).includes(q)).slice(0, query.trim() ? 9 : 11);
     return React.createElement("div", { className: "command-shade", onMouseDown: e => { if (e.target === e.currentTarget)
             close(); } },
         React.createElement("div", { className: "command-dialog", role: "dialog", "aria-modal": "true", "aria-label": L("Quick actions") },
@@ -1027,7 +1028,7 @@ function App() {
                 React.createElement(Icon, { name: "close", size: 15 }))),
         React.createElement("main", { className: "workspace" },
             React.createElement(PageBand, { page: page, setPage: setPage }),
-            page !== 'Home' && page !== 'Library' && page !== 'Guide' && page !== 'Analysis Lab' && page !== 'Options' && page !== 'Public Site' && page !== 'About' && React.createElement("div", { className: "commandbar" },
+            page !== 'Home' && page !== 'Library' && page !== 'Guide' && page !== 'Analysis Lab' && page !== 'Options' && page !== 'Public Site' && page !== 'About' && page !== 'Learn' && React.createElement("div", { className: "commandbar" },
                 React.createElement("div", { className: "ticker-group" },
                     React.createElement("label", null, L("COMPANY / TICKER")),
                     React.createElement("div", { className: "ticker-entry" },
@@ -1046,7 +1047,7 @@ function App() {
                 React.createElement("div", { className: "control-actions" },
                     React.createElement(Button, { onClick: loadCompany, loading: busy === 'company', icon: "company" }, L("Load SEC data")),
                     React.createElement(Button, { variant: "primary", icon: "file", onClick: () => setPage('Reports') }, L("Create report")))),
-            page !== 'Home' && page !== 'Library' && page !== 'Guide' && page !== 'Analysis Lab' && page !== 'Options' && page !== 'Public Site' && page !== 'About' && !financial && !window.QE_DEMO && React.createElement("div", { className: "sec-contact" },
+            page !== 'Home' && page !== 'Library' && page !== 'Guide' && page !== 'Analysis Lab' && page !== 'Options' && page !== 'Public Site' && page !== 'About' && page !== 'Learn' && !financial && !window.QE_DEMO && React.createElement("div", { className: "sec-contact" },
                 React.createElement("span", null,
                     React.createElement(Icon, { name: "shield", size: 15 }),
                     " " + L("SEC identifies automated requests; enter your contact email once before the first SEC download. Not stored in the app.")),
@@ -1072,6 +1073,7 @@ function App() {
             page === 'Options' && React.createElement(HookShell, { key: 'options-page', component: AnalysisLab, focus: 'options_lab', contactEmail: contactEmail, setContactEmail: setContactEmail, report: report, setReport: setReport, setPage: setPage }),
             page === 'Public Site' && React.createElement(HookShell, { component: PublicSite, report: report, setReport: setReport, setPage: setPage }),
             page === 'About' && typeof AboutPage === 'function' && React.createElement(AboutPage, { setPage: setPage }),
+            page === 'Learn' && typeof LearnPage === 'function' && React.createElement(HookShell, { component: LearnPage, setPage: setPage }),
             page === 'Reports' && React.createElement("div", { className: "report-layout" },
                 React.createElement("section", { className: "panel report-composer" },
                     React.createElement("div", { className: "panel-head" },

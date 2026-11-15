@@ -5,7 +5,7 @@
  *
  * Entry fields
  *   id     unique id; type: 'page' | 'analysis' | 'term' | 'faq' | 'chat'
- *   page   page id the entry is about ('Home','Analysis Lab','Public Site','LinkedIn','Reports','Library','Guide','About')
+ *   page   page id the entry is about ('Home','Analysis Lab','Learn','Public Site','LinkedIn','Reports','Library','Guide','About')
  *   analysis  Analysis Lab id (lab_api.catalog()), n = its number in the Lab list
  *   k      search phrases separated by '|' (any language; matching folds Turkish letters and accents)
  *   t      title [tr, en, es]
@@ -21,6 +21,7 @@ var QE_HELP_KB = {
     'Home': ['Ana sayfa', 'Home', 'Inicio'],
     'Analysis Lab': ['Analiz Laboratuvarı', 'Analysis Lab', 'Laboratorio de análisis'],
     'Options': ['Opsiyonlar', 'Options', 'Opciones'],
+    'Learn': ['Öğren', 'Learn', 'Aprende'],
     'Public Site': ['Sitem', 'My public site', 'Mi sitio'],
     'LinkedIn': ['LinkedIn', 'LinkedIn', 'LinkedIn'],
     'Reports': ['Raporlar', 'Reports', 'Informes'],
@@ -33,6 +34,7 @@ var QE_HELP_KB = {
   pageSuggest: {
     'Home': ['page_home', 'faq_first_steps', 'page_about'],
     'Analysis Lab': ['page_lab', 'faq_thesis_required', 'faq_companies'],
+    'Learn': ['page_learn', 'faq_data_sources', 'faq_first_steps'],
     'Options': ['page_options', 'faq_desk_cards', 'an_options_lab', 'faq_advice'],
     'Public Site': ['faq_site_publish', 'faq_track_record', 'faq_was_i_right'],
     'LinkedIn': ['page_linkedin', 'faq_carousel', 'faq_overclaim'],
@@ -414,6 +416,30 @@ var QE_HELP_KB = {
         'Funciona en tu ordenador, sin cuenta, anuncios ni rastreo. **No es asesoramiento de inversión.**'
       ]],
       go: ['About', 'Analysis Lab'], f: ['faq_privacy', 'faq_data_sources', 'faq_first_steps'] },
+
+    { id: 'page_learn', type: 'page', page: 'Learn',
+      k: 'öğren|formül|formüller|formülü ne|nasıl hesaplanıyor|nasıl hesaplanır|hangi veri|veri nereden|nereden başlamalı|nereden başlayayım|açıklama|learn|formula|formulas|how is it calculated|how is it computed|where does the data come from|where to start|aprende|fórmula|fórmulas|cómo se calcula|de dónde salen los datos|por dónde empezar',
+      t: ['Öğren sayfası: formüller ve veriler', 'The Learn page: formulas and data', 'La página Aprende: fórmulas y datos'],
+      b: [[
+        '**Öğren** sayfası, 30 analizin her birinin **ne hesapladığını** anlatır: formülü, her rakamın **nereden geldiğini**, izlediği adımları, uydurma rakamlarla çözülmüş bir örneği, sonucun nasıl okunacağını ve sınırlarını.',
+        '',
+        '- **Nereden başlamalı:** yeni başlayanlar için beş adımlık bir sıra.',
+        '- **Veriler nereden geliyor:** SEC belgeleri, fiyatlar, faizler ve akademik veri setleri; her birinin neye yaradığı ve nelere dikkat etmen gerektiği.',
+        '- Her kartın altındaki düğmeyle analizi doğrudan Laboratuvar’da açabilirsin.'
+      ], [
+        'The **Learn** page explains **what each of the 30 analyses computes**: the formula, **where each number comes from**, the steps, a worked example with made-up numbers, how to read the result and its limits.',
+        '',
+        '- **Where to start:** a five-step order for beginners.',
+        '- **Where the data comes from:** SEC filings, prices, rates and research datasets, what each is used for and what to keep in mind.',
+        '- The button under each card opens that analysis straight in the Lab.'
+      ], [
+        'La página **Aprende** explica **qué calcula cada uno de los 30 análisis**: la fórmula, **de dónde sale cada cifra**, los pasos, un ejemplo resuelto con cifras inventadas, cómo leer el resultado y sus límites.',
+        '',
+        '- **Por dónde empezar:** un orden de cinco pasos para principiantes.',
+        '- **De dónde salen los datos:** documentos de la SEC, precios, tipos de interés y bases académicas, para qué sirve cada uno y qué tener en cuenta.',
+        '- El botón bajo cada tarjeta abre ese análisis directamente en el Laboratorio.'
+      ]],
+      go: ['Learn', 'Analysis Lab'], f: ['faq_data_sources', 'faq_first_steps', 'page_lab'] },
 
     /* ───────────────────────────── the 30 analyses ───────────────────────────── */
     { id: 'an_cycle_compare', type: 'analysis', analysis: 'cycle_compare', n: 1,

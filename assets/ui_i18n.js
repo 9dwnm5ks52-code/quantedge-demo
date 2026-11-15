@@ -655,7 +655,7 @@ Object.assign(QE_TR, {
  "Out-of-sample (second half)": "Test dışı (ikinci yarı)",
  "Out-of-sample starts": "Test dışı başlangıcı",
  "Out-of-sample: strategy minus buy-and-hold (pts)": "Test dışı: strateji eksi al-tut (puan)",
- "Peak-to-trough fall and recovery": "Zirveden dibe düşüş ve toparlanma",
+ "Fall from the window start and recovery": "Dönem başından düşüş ve toparlanma",
  "Peer median": "Rakip ortancası",
  "Period": "Dönem",
  "Pick an analysis": "Bir analiz seç",
@@ -2360,3 +2360,49 @@ Object.assign(QE_TR, { "Black–Scholes and Heston on live option chains, the vo
 Object.assign(QE_ES, { "Black–Scholes and Heston on live option chains, the volatility surface, a scenario grid, and the VIX recomputed with the Cboe method.": "Black–Scholes y Heston sobre cadenas de opciones en vivo, la superficie de volatilidad, una tabla de escenarios y el VIX recalculado con el método de Cboe." });
 Object.assign(QE_TR, { "Open": "Aç" });
 Object.assign(QE_ES, { "Open": "Abrir" });
+// v0.13.5 Learn page
+Object.assign(QE_TR, {"Learn": "Öğren"});
+Object.assign(QE_ES, {"Learn": "Aprende"});
+Object.assign(QE_TR, {"Learn the formulas and the data": "Formülleri ve verileri öğren"});
+Object.assign(QE_ES, {"Learn the formulas and the data": "Aprende las fórmulas y los datos"});
+Object.assign(QE_TR, {"What each analysis computes, where its numbers come from and how to read the result.": "Her analiz ne hesaplıyor, rakamları nereden geliyor ve sonuç nasıl okunur."});
+Object.assign(QE_ES, {"What each analysis computes, where its numbers come from and how to read the result.": "Qué calcula cada análisis, de dónde salen sus cifras y cómo leer el resultado."});
+Object.assign(QE_TR, {"New to this? Follow “Where to start”, then open any analysis in the Lab.": "Yeni misin? “Nereden başlamalı” adımlarını izle, sonra istediğin analizi Laboratuvar’da aç."});
+Object.assign(QE_ES, {"New to this? Follow “Where to start”, then open any analysis in the Lab.": "¿Eres nuevo? Sigue “Por dónde empezar” y luego abre cualquier análisis en el Laboratorio."});
+Object.assign(QE_TR, {"Learn the analyses": "Analizleri öğren"});
+Object.assign(QE_ES, {"Learn the analyses": "Aprende los análisis"});
+Object.assign(QE_TR, {"Every analysis in QuantEdge answers one question. Here you can see how: the formula, where each number comes from, the steps it follows, a worked example with made-up numbers, how to read the result and where it stops being reliable.": "QuantEdge’deki her analiz tek bir soruyu cevaplar. Burada nasıl cevapladığını görürsün: formülü, her rakamın nereden geldiğini, izlediği adımları, uydurma rakamlarla çözülmüş bir örneği, sonucun nasıl okunacağını ve nerede güvenilir olmaktan çıktığını."});
+Object.assign(QE_ES, {"Every analysis in QuantEdge answers one question. Here you can see how: the formula, where each number comes from, the steps it follows, a worked example with made-up numbers, how to read the result and where it stops being reliable.": "Cada análisis de QuantEdge responde a una pregunta. Aquí ves cómo: la fórmula, de dónde sale cada cifra, los pasos que sigue, un ejemplo resuelto con cifras inventadas, cómo leer el resultado y dónde deja de ser fiable."});
+Object.assign(QE_TR, {"Every analysis, explained": "Her analiz, açıklamalı"});
+Object.assign(QE_ES, {"Every analysis, explained": "Cada análisis, explicado"});
+Object.assign(QE_TR, {"Formulas": "Formüller"});
+Object.assign(QE_ES, {"Formulas": "Fórmulas"});
+Object.assign(QE_TR, {"Data it uses": "Kullandığı veriler"});
+Object.assign(QE_ES, {"Data it uses": "Datos que usa"});
+Object.assign(QE_TR, {"Step by step": "Adım adım"});
+Object.assign(QE_ES, {"Step by step": "Paso a paso"});
+Object.assign(QE_TR, {"Worked example (made-up numbers)": "Çözümlü örnek (uydurma rakamlar)"});
+Object.assign(QE_ES, {"Worked example (made-up numbers)": "Ejemplo resuelto (cifras inventadas)"});
+Object.assign(QE_TR, {"How to read it": "Nasıl okunur"});
+Object.assign(QE_ES, {"How to read it": "Cómo leerlo"});
+Object.assign(QE_TR, {"Limits and common mistakes": "Sınırlar ve sık yapılan hatalar"});
+Object.assign(QE_ES, {"Limits and common mistakes": "Límites y errores frecuentes"});
+Object.assign(QE_TR, {"Study next": "Sıradaki"});
+Object.assign(QE_ES, {"Study next": "Estudia después"});
+Object.assign(QE_TR, {"Open in the Analysis Lab": "Analiz Laboratuvarı’nda aç"});
+Object.assign(QE_ES, {"Open in the Analysis Lab": "Abrir en el Laboratorio de análisis"});
+Object.assign(QE_TR, {"The explanations could not be loaded. Refresh the page to try again.": "Açıklamalar yüklenemedi. Tekrar denemek için sayfayı yenile."});
+Object.assign(QE_ES, {"The explanations could not be loaded. Refresh the page to try again.": "No se pudieron cargar las explicaciones. Recarga la página para intentarlo de nuevo."});
+Object.assign(QE_TR, {"Used for": "Kullanıldığı yer"});
+Object.assign(QE_ES, {"Used for": "Se usa para"});
+Object.assign(QE_TR, {"Keep in mind": "Dikkat"});
+Object.assign(QE_ES, {"Keep in mind": "Ten en cuenta"});
+Object.assign(QE_TR, {"Groups": "Gruplar"});
+Object.assign(QE_ES, {"Groups": "Grupos"});
+Object.assign(QE_TR, {"Search a term, e.g. WACC or beta": "Bir terim ara, ör. WACC ya da beta"});
+Object.assign(QE_ES, {"Search a term, e.g. WACC or beta": "Busca un término, p. ej. WACC o beta"});
+Object.assign(QE_TR, {"Search the explanations": "Açıklamalarda ara"});
+Object.assign(QE_ES, {"Search the explanations": "Buscar en las explicaciones"});
+Object.assign(QE_TR, {"Educational explanations of how QuantEdge computes each figure. Not investment advice.": "QuantEdge’in her rakamı nasıl hesapladığına dair eğitim amaçlı açıklamalar. Yatırım tavsiyesi değildir."});
+Object.assign(QE_ES, {"Educational explanations of how QuantEdge computes each figure. Not investment advice.": "Explicaciones educativas de cómo calcula QuantEdge cada cifra. No es asesoramiento de inversión."});
+Object.assign(QE_ES, {"Fall from the window start and recovery": "Caída desde el inicio del periodo y recuperación"});

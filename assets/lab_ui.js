@@ -714,6 +714,13 @@ function AnalysisLab(props) {
     var a = catalog.find(function (x) { return x.id === focus; });
     if (a) choose(a, true);
   });
+  useEffect(function () {  // opened from the Learn page on one analysis: pick it once the catalog is in
+    var want = window.QE_LAB_PICK;
+    if (!want || !catalog || focus) return;
+    window.QE_LAB_PICK = null;
+    var a = catalog.find(function (x) { return x.id === want; });
+    if (a) choose(a);
+  });
   function choose(a, quiet) {
     runEpoch.current++; st.busy[1](false);  // a run still out for the previous analysis is dropped when it answers
     st.selected[1](a.id); st.menuOpen[1](false); st.menuTab[1](a.group); st.tickers[1]((a.example || []).join(', '));  // the tabs follow the chosen analysis's group
