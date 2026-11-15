@@ -13,13 +13,15 @@
 var QE_LANGS = ['tr', 'en', 'es'];
 // a published copy can be pinned to one language (make_demo_site.py --only-lang): no switch is shown then
 var QE_FIXED = (typeof window !== 'undefined' && window.QE_FIXED) || {};
+// ... or only given a first-visit language and theme (--default-lang): a visitor's own choice still wins
+var QE_DEFAULTS = (typeof window !== 'undefined' && window.QE_DEFAULTS) || {};
 if (QE_LANGS.indexOf(QE_FIXED.lang) >= 0) QE_LANGS = [QE_FIXED.lang];
 var QE_LANG = (function () {
   if (QE_LANGS.length === 1) return QE_LANGS[0];
   try {
     var saved = window.localStorage.getItem('qe.lang');
-    return QE_LANGS.indexOf(saved) >= 0 ? saved : 'tr';
-  } catch (_) { return 'tr'; }
+    return QE_LANGS.indexOf(saved) >= 0 ? saved : QE_LANGS.indexOf(QE_DEFAULTS.lang) >= 0 ? QE_DEFAULTS.lang : 'tr';
+  } catch (_) { return QE_LANGS.indexOf(QE_DEFAULTS.lang) >= 0 ? QE_DEFAULTS.lang : 'tr'; }
 })();
 
 var QE_TR = {

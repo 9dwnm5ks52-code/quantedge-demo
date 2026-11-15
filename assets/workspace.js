@@ -61,6 +61,7 @@ const API = '/api/v2';
 function qeThemeInitial() {
     if (QE_FIXED.theme === 'light' || QE_FIXED.theme === 'dark') return QE_FIXED.theme;  // a pinned published copy
     try { const t = localStorage.getItem('qe.theme'); if (t === 'light' || t === 'dark') return t; } catch (e) { }
+    if (QE_DEFAULTS.theme === 'light' || QE_DEFAULTS.theme === 'dark') return QE_DEFAULTS.theme;  // first visit to a published copy
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 }
 function qeApplyTheme(t) {
