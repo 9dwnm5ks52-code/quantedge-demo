@@ -59,6 +59,7 @@ function useEffect(effect, deps) {
 const API = '/api/v2';
 /* Theme: the saved choice, else the system setting. Applied before the first render so the page does not flash. */
 function qeThemeInitial() {
+    if (QE_FIXED.theme === 'light' || QE_FIXED.theme === 'dark') return QE_FIXED.theme;  // a pinned published copy
     try { const t = localStorage.getItem('qe.theme'); if (t === 'light' || t === 'dark') return t; } catch (e) { }
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 }
@@ -69,6 +70,7 @@ function qeApplyTheme(t) {
 }
 qeApplyTheme(qeThemeInitial());
 function ThemeSwitch() {
+    if (QE_FIXED.theme === 'light' || QE_FIXED.theme === 'dark') return null;
     const [theme, setTheme] = useState(document.documentElement.dataset.theme || 'dark');
     const next = theme === 'light' ? 'dark' : 'light';
     const toggle = () => { qeApplyTheme(next); try { localStorage.setItem('qe.theme', next); } catch (e) { } setTheme(next); window.dispatchEvent(new Event('qe-theme')); };
@@ -1007,7 +1009,7 @@ function App() {
                         // the options tab says whether the US market is live: LIVE with a pulsing dot in the session, CLOSED outside it
                         label === 'Options' && typeof QeOptMarketBadge === 'function' && React.createElement(QeOptMarketBadge, null))))),
             React.createElement("div", { className: "top-actions" },
-                React.createElement("div", { className: "lang-switch", role: "group", "aria-label": L("Interface language") }, QE_LANGS.map(code => React.createElement("button", { key: code, type: "button", lang: code, "aria-pressed": lang === code, className: lang === code ? 'is-selected' : '', onClick: () => setLang(code) }, code.toUpperCase()))),
+                QE_LANGS.length > 1 && React.createElement("div", { className: "lang-switch", role: "group", "aria-label": L("Interface language") }, QE_LANGS.map(code => React.createElement("button", { key: code, type: "button", lang: code, "aria-pressed": lang === code, className: lang === code ? 'is-selected' : '', onClick: () => setLang(code) }, code.toUpperCase()))),
                 React.createElement("button", { className: "global-search", "aria-label": L("Open quick commands"), title: L("Search commands (Command K)"), onClick: () => { setCommandOpen(true); setCommandQuery(''); } },
                     React.createElement(Icon, { name: "search", size: 16 }),
                     React.createElement("span", null, L("Search actions")),

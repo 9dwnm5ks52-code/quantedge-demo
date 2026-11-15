@@ -11,7 +11,11 @@
  * Server data (company names, SEC figures, error details) is not translated.
  */
 var QE_LANGS = ['tr', 'en', 'es'];
+// a published copy can be pinned to one language (make_demo_site.py --only-lang): no switch is shown then
+var QE_FIXED = (typeof window !== 'undefined' && window.QE_FIXED) || {};
+if (QE_LANGS.indexOf(QE_FIXED.lang) >= 0) QE_LANGS = [QE_FIXED.lang];
 var QE_LANG = (function () {
+  if (QE_LANGS.length === 1) return QE_LANGS[0];
   try {
     var saved = window.localStorage.getItem('qe.lang');
     return QE_LANGS.indexOf(saved) >= 0 ? saved : 'tr';
