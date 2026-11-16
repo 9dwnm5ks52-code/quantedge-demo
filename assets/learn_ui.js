@@ -5,7 +5,7 @@
  * with a made-up worked example. The content (three languages) lives in learn_kb.js and is
  * loaded the first time the page opens. Interface labels are English keys in ui_i18n.js.
  */
-var QE_LEARN_SECTIONS = [['learn-path', 'Where to start'], ['learn-sources', 'Where the data comes from'], ['learn-analyses', 'Every analysis, explained']];
+var QE_LEARN_SECTIONS = [['learn-path', 'Where to start'], ['learn-sources', 'Where the data comes from'], ['learn-analyses', 'Every analysis, explained'], ['learn-glossary', 'Dictionary A–Z']];
 
 function qeLearnText(obj) {  // {en, tr, es} -> the interface language, English when missing
   if (!obj || typeof obj !== 'object') return obj || '';
@@ -16,7 +16,7 @@ function qeLearnLoad(done) {
   if (window.QE_LEARN) { done(true); return; }
   var me = [].slice.call(document.scripts).filter(function (s) { return /learn_ui\.js/.test(s.src); })[0];
   var tag = document.createElement('script');
-  tag.src = me ? me.src.replace(/learn_ui\.js[^/]*$/, 'learn_kb.js') : 'assets/learn_kb.js';
+  tag.src = me ? me.src.replace(/learn_ui\.js(\?[^/]*)?$/, 'learn_kb.js' + (window.QE_LEARN_V ? '?v=' + window.QE_LEARN_V : '')) : 'assets/learn_kb.js';
   tag.onload = function () { done(!!window.QE_LEARN); };
   tag.onerror = function () { done(false); };
   document.head.appendChild(tag);
@@ -27,50 +27,87 @@ function qeLearnScroll(id) {
 }
 
 function LearnCard(props) {
-  var e = React.createElement, c = props.card, t = c[QE_LANG] || c.en;
+  var e = React.createElement, c = props.card, t = c[QE_LANG] || c.en, seen = {};
+  var lt = function (x) { return typeof qeLearnLinkTerms === 'function' ? qeLearnLinkTerms(x, seen) : x; };  // first mention of a known term gets its "?"
   var list = function (cls, items, ordered) {
-    return e(ordered ? 'ol' : 'ul', { className: cls }, (items || []).map(function (x, i) { return e('li', { key: i }, x); }));
+    return e(ordered ? 'ol' : 'ul', { className: cls }, (items || []).map(function (x, i) { return e('li', { key: i }, lt(x)); }));
   };
   return e('details', { id: 'learn-' + c.id, className: 'learn-card g-' + c.group, open: props.open, onToggle: function (ev) { props.onToggle(c.id, ev.target.open); } },
     e('summary', null,
       e('span', { className: 'lab-icon', 'aria-hidden': 'true' }, typeof qeLabGlyph === 'function' ? qeLabGlyph(c.id) : null),
       e('span', { className: 'learn-card-head' },
         e('span', { className: 'lab-item-num' }, '#' + c.number + ' · ' + L(c.group_label)),
-        e('strong', null, L(c.title)),
+        e('strong', null, L(c.title), props.done && e('span', { className: 'learn-done-tag' }, '✓ ' + L('Learned'))),
         e('small', null, t.question))),
     e('div', { className: 'learn-card-body' },
-      e('p', { className: 'learn-idea' }, t.idea),
+      e('p', { className: 'learn-idea' }, lt(t.idea)),
       e('h4', null, L(t.formulas.length > 1 ? 'Formulas' : 'Formula')),
       t.formulas.map(function (f, i) {
         return e('div', { key: i, className: 'learn-formula' },
           e('div', { className: 'learn-formula-name' }, f.name),
           e('code', null, f.expr),
           f.where && f.where.length > 0 && e('dl', null, [].concat.apply([], f.where.map(function (w, j) {  // this React has no Fragment
-            return [e('dt', { key: 't' + j }, w[0]), e('dd', { key: 'd' + j }, w[1])];
+            return [e('dt', { key: 't' + j }, w[0]), e('dd', { key: 'd' + j }, lt(w[1]))];
           }))));
       }),
       e('h4', null, L('Data it uses')),
       e('div', { className: 'learn-data' }, (t.data || []).map(function (d, i) {
-        return e('div', { key: i, className: 'learn-data-row' }, e('strong', null, d[0]), e('span', null, d[1]));
+        return e('div', { key: i, className: 'learn-data-row' }, e('strong', null, d[0]), e('span', null, lt(d[1])));
       })),
       e('h4', null, L('Step by step')),
       list('learn-steps', t.steps, true),
-      e('div', { className: 'learn-example' }, e('h4', null, L('Worked example (made-up numbers)')), e('p', null, t.example)),
+      e('div', { className: 'learn-example' }, e('h4', null, L('Worked example (made-up numbers)')), e('p', null, lt(t.example))),
+      typeof QE_LEARN_CALC !== 'undefined' && QE_LEARN_CALC[c.id] && e(HookShell, { component: LearnCalc, id: c.id }),
       e('div', { className: 'learn-two' },
         e('div', null, e('h4', null, L('How to read it')), list('learn-read', t.read)),
         e('div', null, e('h4', null, L('Limits and common mistakes')), list('learn-limits', t.limits))),
+      c.quiz && c.quiz.length > 0 && typeof LearnQuiz === 'function' && e(HookShell, { component: LearnQuiz, quiz: c.quiz }),
       e('div', { className: 'learn-card-foot' },
         (c.next || []).length > 0 && e('div', { className: 'learn-next' }, e('span', { className: 'micro muted' }, L('Study next')),
           c.next.map(function (id) {
             var n = props.byId[id];
             return n && e('button', { key: id, type: 'button', className: 'learn-chip g-' + n.group, onClick: function () { props.jump(id); } }, L(n.title));
           })),
-        e(Button, { icon: 'model', onClick: function () { props.openLab(c); } }, L('Open in the Analysis Lab')))));
+        e('div', { className: 'learn-foot-actions' },
+          e('button', { type: 'button', className: 'learn-done-btn' + (props.done ? ' is-done' : ''), 'aria-pressed': !!props.done, onClick: function () { props.toggleDone(c.id); } },
+            props.done ? '✓ ' + L('Learned') : L('Mark as learned')),
+          e(Button, { icon: 'model', onClick: function () { props.openLab(c); } }, L('Open in the Analysis Lab'))))));
+}
+
+/* Every glossary term, A–Z in the interface language, with a search box. */
+function LearnGlossary() {
+  var e = React.createElement, q = useState('');
+  if (typeof qeGlossaryAll !== 'function') return null;
+  var all = qeGlossaryAll();
+  var loc = QE_LANG === 'en' ? 'en' : QE_LANG;
+  var items = Object.keys(all).map(function (k) { var g = all[k]; return { k: k, t: g[QE_LANG] || g.en }; })
+    .sort(function (a, b) { return a.t[0].localeCompare(b.t[0], loc, { sensitivity: 'base' }); });
+  var s = q[0].trim().toLocaleLowerCase();
+  var shown = s ? items.filter(function (x) { return (x.t[0] + ' ' + x.t[1]).toLocaleLowerCase().indexOf(s) >= 0; }) : items;
+  var ex = L('Example');
+  return e('section', { id: 'learn-glossary', className: 'panel learn-glossary' },
+    e('h2', null, L('Dictionary A–Z')),
+    e('p', { className: 'muted' }, L('Every term used in QuantEdge in one place. Terms are also explained where they appear: look for the small “?”.')),
+    e('input', { type: 'search', className: 'learn-search', value: q[0], placeholder: L('Search a term, e.g. WACC or beta'), 'aria-label': L('Search the dictionary'),
+      onChange: function (ev) { q[1](ev.target.value); } }),
+    e('p', { className: 'micro muted' }, L('{n} terms').replace('{n}', shown.length)),
+    shown.length === 0 ? e('p', { className: 'micro muted' }, L('No term matches this search.')) :
+      e('dl', { className: 'learn-gloss-list' }, [].concat.apply([], shown.map(function (x) {
+        return [e('dt', { key: 't' + x.k, id: 'term-' + x.k }, x.t[0]),
+          e('dd', { key: 'd' + x.k }, x.t[1], x.t[2] ? e('em', null, ex + ': ' + x.t[2]) : null)];
+      }))));
 }
 
 function LearnPage(props) {
   var e = React.createElement;
   var ready = useState(!!window.QE_LEARN), failed = useState(false), tab = useState('all'), query = useState(''), open = useState({});
+  var done = useState(function () { return typeof qeLearnDoneRead === 'function' ? qeLearnDoneRead() : []; });
+  function toggleDone(id) {
+    var list = done[0].indexOf(id) >= 0 ? done[0].filter(function (x) { return x !== id; }) : done[0].concat([id]);
+    done[1](list);
+    if (typeof qeLearnDoneWrite === 'function') qeLearnDoneWrite(list);
+  }
+  var isDone = function (id) { return done[0].indexOf(id) >= 0; };
   useEffect(function () {
     if (ready[0]) return;
     qeLearnLoad(function (ok) { if (ok) ready[1](true); else failed[1](true); });
@@ -114,13 +151,23 @@ function LearnPage(props) {
     e('section', { id: 'learn-path', className: 'panel learn-path' },
       e('h2', null, L('Where to start')),
       e('p', { className: 'muted' }, qeLearnText(kb.path_intro)),
+      (function () {
+        var n = kb.cards.filter(function (c) { return isDone(c.id); }).length, pct = Math.round(n / kb.cards.length * 100);
+        return e('div', { className: 'learn-progress' },
+          e('div', { className: 'learn-progress-text' }, e('strong', null, L('Your progress')),
+            e('span', null, L('{n} of {m} analyses learned').replace('{n}', n).replace('{m}', kb.cards.length))),
+          e('div', { className: 'learn-progress-bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': kb.cards.length, 'aria-valuenow': n, 'aria-label': L('Your progress') },
+            e('span', { style: { width: pct + '%' } })),
+          e('p', { className: 'micro muted' }, L('Saved in this browser only. Open a card and press “Mark as learned” when you are done.')));
+      })(),
       e('ol', { className: 'learn-path-steps' }, kb.path.map(function (s, i) {
-        return e('li', { key: i },
-          e('strong', null, qeLearnText(s.title)),
+        var stepDone = s.ids.filter(isDone).length;
+        return e('li', { key: i, className: stepDone === s.ids.length ? 'is-complete' : '' },
+          e('div', { className: 'learn-step-head' }, e('strong', null, qeLearnText(s.title)), e('span', { className: 'learn-step-count' }, stepDone + '/' + s.ids.length)),
           e('p', null, qeLearnText(s.text)),
           e('div', { className: 'learn-next' }, s.ids.map(function (id) {
             var n = byId[id];
-            return n && e('button', { key: id, type: 'button', className: 'learn-chip g-' + n.group, onClick: function () { jump(id); } }, L(n.title));
+            return n && e('button', { key: id, type: 'button', className: 'learn-chip g-' + n.group + (isDone(id) ? ' is-done' : ''), onClick: function () { jump(id); } }, (isDone(id) ? '✓ ' : '') + L(n.title));
           })));
       }))),
     e('section', { id: 'learn-sources', className: 'panel learn-sources' },
@@ -146,7 +193,9 @@ function LearnPage(props) {
           onChange: function (ev) { query[1](ev.target.value); } })),
       shown.length === 0 ? e('p', { className: 'micro muted' }, L('No analysis matches this search.')) :
         e('div', { className: 'learn-list' }, shown.map(function (c) {
-          return e(LearnCard, { key: c.id, card: c, byId: byId, open: !!open[0][c.id] || (!!q && shown.length <= 3), onToggle: setOpen, jump: jump, openLab: openLab });
-        })),
-      e('p', { className: 'micro muted learn-foot' }, L('Educational explanations of how QuantEdge computes each figure. Not investment advice.'))));
+          return e(LearnCard, { key: c.id, card: c, byId: byId, open: !!open[0][c.id] || (!!q && shown.length <= 3), onToggle: setOpen, jump: jump, openLab: openLab,
+            done: isDone(c.id), toggleDone: toggleDone });
+        }))),
+    e(HookShell, { component: LearnGlossary }),
+    e('p', { className: 'micro muted learn-foot' }, L('Educational explanations of how QuantEdge computes each figure. Not investment advice.')));
 }
